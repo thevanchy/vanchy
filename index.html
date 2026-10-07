@@ -3,53 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Benim Bağlantılarım | Profil</title>
+    <title>Profilim | PPF.ONE Premium</title>
+    <link rel="stylesheet" href="style.css">
     <link href="https://googleapis.com" rel="stylesheet">
     <link rel="stylesheet" href="https://cloudflare.com">
-    <style>
-        :root { --bg-color: #0f172a; --text-color: #ffffff; --card-bg: #1e293b; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 40px 20px; transition: background 0.3s, color 0.3s; }
-        .profile-container { width: 100%; max-width: 500px; text-align: center; }
-        .avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--text-color); margin-bottom: 15px; background: #334155; }
-        .name { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
-        .bio { font-size: 0.95rem; opacity: 0.8; margin-bottom: 30px; line-height: 1.5; }
-        .links-wrapper { display: flex; flex-direction: column; gap: 14px; width: 100%; }
-        .link-card { background-color: var(--card-bg); color: var(--text-color); padding: 16px 20px; border-radius: 14px; text-decoration: none; font-weight: 600; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.2s, box-shadow 0.2s; }
-        .link-card:hover { transform: scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-    </style>
 </head>
 <body>
+
     <div class="profile-container">
-        <img id="viewAvatar" src="" alt="Avatar" class="avatar">
-        <h1 id="viewName" class="name">-</h1>
-        <p id="viewBio" class="bio">-</p>
-        <div id="linksContainer" class="links-wrapper"></div>
+        <!-- Hazır ve Aktif Profil Resmi -->
+        <div class="avatar-box">
+            <img id="viewAvatar" src="https://unsplash.com" alt="Avatar" class="avatar">
+        </div>
+        
+        <!-- Dinamik Rozetlerin Sıralandığı Alan -->
+        <div id="badgeArea" class="badge-row"></div>
+        
+        <h1 id="viewName" class="name-wrapper">-</h1>
+        <p id="viewBio" class="bio-text">-</p>
+
+        <!-- Çalışır Durumda Canlı Canlı Müzik Oynatıcı -->
+        <div id="musicModule" class="audio-player-box" style="display:none;">
+            <button class="play-btn" onclick="toggleMusic()"><i id="playIcon" class="fa-solid fa-play"></i></button>
+            <div style="text-align:left;">
+                <span id="musicTitle" style="font-weight:700; font-size:0.9rem; display:block;">Fon Müziği</span>
+                <span style="font-size:0.75rem; opacity:0.5;">Profil Parçası (Canlı Medya)</span>
+            </div>
+            <audio id="bgAudio" loop></audio>
+        </div>
+        
+        <!-- Dinamik Link Grubu -->
+        <div id="linksWrapper" class="links-group"></div>
     </div>
-    
-    <!-- Ayar Verilerini Yükleyen Script -->
+
+    <!-- Video Popup Katmanı -->
+    <div id="videoModal" class="video-modal">
+        <span class="close-video" onclick="closeVideo()"><i class="fa-solid fa-xmark"></i></span>
+        <div class="video-box" id="videoBox"></div>
+    </div>
+
+    <!-- Çekirdek Sistem Entegrasyonu -->
     <script src="data.js"></script>
-    <script>
-        window.onload = function() {
-            // Ziyaretçi sayısını yerel olarak artır
-            if(!sessionStorage.getItem('visited')) {
-                profileData.views = (profileData.views || 0) + 1;
-                sessionStorage.setItem('visited', 'true');
-            }
-            
-            document.getElementById('viewName').innerText = profileData.name;
-            document.getElementById('viewBio').innerText = profileData.bio;
-            document.getElementById('viewAvatar').src = profileData.avatar;
-            document.documentElement.style.setProperty('--bg-color', profileData.bg);
-            document.documentElement.style.setProperty('--card-bg', profileData.cardBg);
-            document.documentElement.style.setProperty('--text-color', profileData.textColor);
-            
-            const container = document.getElementById('linksContainer');
-            container.innerHTML = '';
-            profileData.links.forEach(link => {
-                container.innerHTML += `<a href="${link.url}" target="_blank" class="link-card"><i class="${link.icon}"></i><span>${link.title}</span><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem; opacity:0.4;"></i></a>`;
-            });
-        };
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
