@@ -3,76 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Benim Bağlantılarım | Özel Profil</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Benim Bağlantılarım | Profil</title>
     <link href="https://googleapis.com" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <style>
+        :root { --bg-color: #0f172a; --text-color: #ffffff; --card-bg: #1e293b; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 40px 20px; transition: background 0.3s, color 0.3s; }
+        .profile-container { width: 100%; max-width: 500px; text-align: center; }
+        .avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--text-color); margin-bottom: 15px; background: #334155; }
+        .name { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .bio { font-size: 0.95rem; opacity: 0.8; margin-bottom: 30px; line-height: 1.5; }
+        .links-wrapper { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+        .link-card { background-color: var(--card-bg); color: var(--text-color); padding: 16px 20px; border-radius: 14px; text-decoration: none; font-weight: 600; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.2s, box-shadow 0.2s; }
+        .link-card:hover { transform: scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+    </style>
 </head>
 <body>
-    <div id="userView" class="profile-container">
+    <div class="profile-container">
         <img id="viewAvatar" src="" alt="Avatar" class="avatar">
         <h1 id="viewName" class="name">-</h1>
         <p id="viewBio" class="bio">-</p>
         <div id="linksContainer" class="links-wrapper"></div>
-        <span class="admin-trigger" onclick="openLogin()">🔒 Yönetim Paneli</span>
     </div>
-
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <h3>🔒 Yetkili Girişi</h3>
-            <div class="input-group">
-                <label>GitHub Kişisel Erişim Tokenı (PAT)</label>
-                <input type="password" id="adminPassword" placeholder="ghp_ ile başlayan token kodunuz">
-                <small style="color:#94a3b8; display:block; margin-top:5px;">Verilerinizin GitHub'a kaydedilmesi için şifre olarak Token kullanmalısınız.</small>
-            </div>
-            <button class="btn" onclick="checkPassword()">Giriş Yap</button>
-            <button class="btn btn-danger" style="margin-top:5px;" onclick="closeModal('loginModal')">İptal</button>
-        </div>
-    </div>
-
-    <div id="adminView" class="admin-panel">
-        <div class="admin-header">
-            <h2>⚙️ Profil Kontrol Merkezi</h2>
-            <button class="btn" style="width:auto; margin:0; background:#475569;" onclick="logout()">Çıkış Yap</button>
-        </div>
-        <div class="stats-grid">
-            <div class="stat-box">Toplam Görüntülenme<span id="statTotal">0</span></div>
-            <div class="stat-box">Bağlantı Sayısı<span id="statLinksCount">0</span></div>
-        </div>
-        <div class="section-title">1. Profil & Görünüm Ayarları</div>
-        <div class="input-group"><label>Görünecek İsim</label><input type="text" id="editName"></div>
-        <div class="input-group"><label>Biyografi Yazısı</label><textarea id="editBio" rows="2"></textarea></div>
-        <div class="input-group"><label>Profil Resmi URL adresi</label><input type="text" id="editAvatar"></div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-            <div class="input-group"><label>Arka Plan (Hex/RGB)</label><input type="text" id="editBg"></div>
-            <div class="input-group"><label>Buton Rengi</label><input type="text" id="editCardBg"></div>
-            <div class="input-group"><label>Yazı Rengi</label><input type="text" id="editTextColor"></div>
-        </div>
-        <div class="section-title" style="margin-top:25px;">2. GitHub Depo Ayarları (Kalıcılık İçin)</div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <div class="input-group"><label>GitHub Kullanıcı Adınız</label><input type="text" id="editGhUser" placeholder="Orn: ahmet123"></div>
-            <div class="input-group"><label>Depo (Repository) Adınız</label><input type="text" id="editGhRepo" placeholder="Orn: link-sitem"></div>
-        </div>
-        <div class="section-title" style="margin-top:25px;">3. Bağlantıları Yönet</div>
-        <div class="add-link-box">
-            <div class="input-group"><label>Bağlantı Başlığı</label><input type="text" id="newLinkTitle"></div>
-            <div class="input-group"><label>Link Adresi (URL)</label><input type="text" id="newLinkUrl" placeholder="https://..."></div>
-            <div class="input-group">
-                <label>İkon Seçimi</label>
-                <select id="newLinkIcon">
-                    <option value="fa-solid fa-link">Standart Link 🔗</option>
-                    <option value="fa-brands fa-instagram">Instagram 📸</option>
-                    <option value="fa-brands fa-twitter">Twitter / X 🐦</option>
-                    <option value="fa-brands fa-github">GitHub 💻</option>
-                    <option value="fa-brands fa-youtube">YouTube 📺</option>
-                    <option value="fa-solid fa-file-pdf">Dosya / CV / Medya 📄</option>
-                </select>
-            </div>
-            <button class="btn" style="background:#22c55e;" onclick="addLink()">Listeye Ekle</button>
-        </div>
-        <div id="adminLinksList"></div>
-        <button class="btn btn-save" onclick="saveAllData()">💾 Değişiklikleri GitHub'a Gönder ve Yayınla</button>
-    </div>
-    <script src="script.js"></script>
+    
+    <!-- Ayar Verilerini Yükleyen Script -->
+    <script src="data.js"></script>
+    <script>
+        window.onload = function() {
+            // Ziyaretçi sayısını yerel olarak artır
+            if(!sessionStorage.getItem('visited')) {
+                profileData.views = (profileData.views || 0) + 1;
+                sessionStorage.setItem('visited', 'true');
+            }
+            
+            document.getElementById('viewName').innerText = profileData.name;
+            document.getElementById('viewBio').innerText = profileData.bio;
+            document.getElementById('viewAvatar').src = profileData.avatar;
+            document.documentElement.style.setProperty('--bg-color', profileData.bg);
+            document.documentElement.style.setProperty('--card-bg', profileData.cardBg);
+            document.documentElement.style.setProperty('--text-color', profileData.textColor);
+            
+            const container = document.getElementById('linksContainer');
+            container.innerHTML = '';
+            profileData.links.forEach(link => {
+                container.innerHTML += `<a href="${link.url}" target="_blank" class="link-card"><i class="${link.icon}"></i><span>${link.title}</span><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem; opacity:0.4;"></i></a>`;
+            });
+        };
+    </script>
 </body>
 </html>
