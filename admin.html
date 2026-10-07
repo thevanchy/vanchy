@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Yönetim Paneli</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <style>
+        body { background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .login-box { background: #1e293b; padding: 30px; border-radius: 16px; border: 1px solid #334155; width: 100%; max-width: 400px; text-align: center; }
+        .panel-box { display: none; background: #1e293b; padding: 25px; border-radius: 16px; border: 1px solid #334155; width: 100%; max-width: 650px; }
+        .input-group { margin-bottom: 14px; text-align: left; }
+        .input-group label { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 4px; }
+        input, textarea, select { width: 100%; padding: 10px 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; font-size: 0.9rem; box-sizing: border-box; }
+        input:focus { border-color: #3b82f6; outline: none; }
+        .btn { background: #3b82f6; color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 5px; }
+        .btn-danger { background: #ef4444; }
+        .btn-save { background: #22c55e; padding: 14px; font-size: 1.05rem; margin-top: 25px; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3); }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        .section-title { font-size: 1rem; font-weight: 700; color: #94a3b8; margin: 20px 0 10px 0; border-left: 3px solid #3b82f6; padding-left: 8px; }
+        .link-item { background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; }
+    </style>
+</head>
+<body>
+
+    <!-- GİRİŞ EKRANI -->
+    <div id="loginSection" class="login-box">
+        <h2 style="margin-bottom:20px;">🔐 Yönetim Girişi</h2>
+        <div class="input-group">
+            <label>Kullanıcı Adı</label>
+            <input type="text" id="panelUser" placeholder="Kullanıcı adınız">
+        </div>
+        <div class="input-group">
+            <label>Giriş Şifresi</label>
+            <input type="password" id="panelPass" placeholder="Şifreniz">
+        </div>
+        <button class="btn" onclick="tryLogin()">Sisteme Giriş Yap</button>
+    </div>
+
+    <!-- YÖNETİM PANELİ EKRANI -->
+    <div id="panelSection" class="panel-box">
+        <div class="admin-header">
+            <h2>⚙️ Kontrol Merkezi</h2>
+            <button class="btn btn-danger" style="width:auto; margin:0;" onclick="location.reload()">Çıkış</button>
+        </div>
+
+        <div class="section-title">1. Profil & Tasarım</div>
+        <div class="input-group"><label>Görünecek İsim</label><input type="text" id="editName"></div>
+        <div class="input-group"><label>Biyografi Yazısı</label><textarea id="editBio" rows="2"></textarea></div>
+        <div class="input-group"><label>Profil Resmi URL</label><input type="text" id="editAvatar"></div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+            <div class="input-group"><label>Arka Plan</label><input type="text" id="editBg"></div>
+            <div class="input-group"><label>Buton Rengi</label><input type="text" id="editCardBg"></div>
+            <div class="input-group"><label>Yazı Rengi</label><input type="text" id="editTextColor"></div>
+        </div>
+
+        <div class="section-title">2. Güvenlik & Sistem Ayarları</div>
+        <div class="input-group"><label>Yeni Panel Giriş Şifresi</label><input type="text" id="editPanelPassword"></div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="input-group"><label>GitHub Kullanıcı Adı</label><input type="text" id="editGhUser"></div>
+            <div class="input-group"><label>GitHub Depo (Repo) Adı</label><input type="text" id="editGhRepo"></div>
+        </div>
+        <div class="input-group">
+            <label>GitHub Erişim Tokenı (PAT)</label>
+            <input type="password" id="editGhToken" placeholder="ghp_ ile başlayan anahtarınız">
+        </div>
+
+        <div class="section-title">3. Bağlantıları Düzenle</div>
+        <div style="background: #0f172a; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #334155;">
+            <div class="input-group"><label>Bağlantı Başlığı</label><input type="text" id="newTitle"></div>
+            <div class="input-group"><label>Link Adresi (URL)</label><input type="text" id="newUrl" placeholder="https://..."></div>
+            <div class="input-group">
+                <label>İkon</label>
+                <select id="newIcon">
+                    <option value="fa-solid fa-link">Standart Link 🔗</option>
+                    <option value="fa-brands fa-instagram">Instagram 📸</option>
+                    <option value="fa-brands fa-twitter">Twitter / X 🐦</option>
+                    <option value="fa-brands fa-github">GitHub 💻</option>
+                    <option value="fa-brands fa-youtube">YouTube 📺</option>
+                </select>
+            </div>
+            <button class="btn" style="background:#22c55e;" onclick="addLinkItem()">Listeye Ekle</button>
+        </div>
+
+        <div id="linksList"></div>
+        <button class="btn btn-save" onclick="pushUpdatesToGithub()">💾 Değişiklikleri Kaydet ve Sitede Yayınla</button>
+    </div>
+
+    <!-- Sistem Mantığı (Hatasız ve Temiz) -->
+    <script src="data.js"></script>
+    <script>
+        function tryLogin() {
+            var user = document.getElementById('panelUser').value.trim();
+            var pass = document.getElementById('panelPass').value.trim();
+            
+            if(user === "admin" && pass === profileData.panelPassword) {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('panelSection').style.display = 'block';
+                initFields();
+            } else {
+                alert("Hatalı kullanıcı adı veya şifre!");
+            }
+        }
+
+        function initFields() {
+            document.getElementById('editName').value = profileData.name;
+            document.getElementById('editBio').value = profileData.bio;
+            document.getElementById('editAvatar').value = profileData.avatar;
+            document.getElementById('editBg').value = profileData.bg;
+            document.getElementById('editCardBg').value = profileData.cardBg;
+            document.getElementById('editTextColor').value = profileData.textColor;
+            document.getElementById('editPanelPassword').value = profileData.panelPassword;
+            document.getElementById('editGhUser').value = profileData.ghUser || "";
+            document.getElementById('editGhRepo').value = profileData.ghRepo || "";
+            if(profileData.ghTokenEncrypted) {
+                document.getElementById('editGhToken').placeholder = "Kayıtlı Anahtar Mevcut";
+            }
+            renderLinks();
+        }
+
+        function renderLinks() {
+            var list = document.getElementById('linksList');
+            list.innerHTML = '';
+            profileData.links.forEach(function(link, i) {
+                list.innerHTML += '<div class="link-item"><span><i class="' + link.icon + '"></i> ' + link.title + '</span><button class="btn btn-danger" style="width:auto; padding:4px 10px; margin:0;" onclick="removeLinkItem(' + i + ')">Sil</button></div>';
+            });
+        }
+
+        function addLinkItem() {
+            var title = document.getElementById('newTitle').value;
+            var url = document.getElementById('newUrl').value;
+            var icon = document.getElementById('newIcon').value;
+            if(!title || !url) return alert("Alanlar boş geçilemez!");
+            profileData.links.push({title: title, url: url, icon: icon});
+            document.getElementById('newTitle').value = '';
+            document.getElementById('newUrl').value = '';
+            renderLinks();
+        }
+
+        function removeLinkItem(index) {
+            profileData.links.splice(index, 1);
+            renderLinks();
+        }
+
+        async function pushUpdatesToGithub() {
+            profileData.name = document.getElementById('editName').value;
+            profileData.bio = document.getElementById('editBio').value;
+            profileData.avatar = document.getElementById('editAvatar').value;
+            profileData.bg = document.getElementById('editBg').value;
+            profileData.cardBg = document.getElementById('editCardBg').value;
+            profileData.textColor = document.getElementById('editTextColor').value;
+            profileData.panelPassword = document.getElementById('editPanelPassword').value;
+            profileData.ghUser = document.getElementById('editGhUser').value.trim();
+            profileData.ghRepo = document.getElementById('editGhRepo').value.trim();
+
+            var token = document.getElementById('editGhToken').value.trim();
+            if(token) {
+                profileData.ghTokenEncrypted = btoa(token);
+            } else if (profileData.ghTokenEncrypted) {
+                token = atob(profileData.ghTokenEncrypted);
+            }
+
+            if(!profileData.ghUser || !profileData.ghRepo || !token) {
+                return alert("GitHub entegrasyon bilgileriniz eksik!");
+            }
+
+Kodu dikkatli kullanın.
+var url = "github.com" + profileData.ghUser + "/" + profileData.ghRepo + "/contents/data.js";
+try {
+var sha = "";
+var resGet = await fetch(url, { headers: { "Authorization": "token " + token } });
+if(resGet.ok) {
+var dataGet = await resGet.json();
+sha = dataGet.sha;
+}
+var fileContent = "let profileData = " + JSON.stringify(profileData, null, 4) + ";";
+var b64Content = btoa(unescape(encodeURIComponent(fileContent)));
+var resPut = await fetch(url, {
+method: "PUT",
+headers: { "Authorization": "token " + token, "Content-Type": "application/json" },
+body: JSON.stringify({ message: "Panel güncellemesi", content: b64Content, sha: sha })
+});
+if(resPut.ok) {
+alert("🚀 Değişiklikler başarıyla kaydedildi! Siteniz güncelleniyor.");
+location.reload();
+} else {
+alert("GitHub kayıt hatası! Lütfen bilgilerinizi kontrol edin.");
+}
+} catch(e) {
+alert("Bağlantı hatası yaşandı!");
+}
+}
