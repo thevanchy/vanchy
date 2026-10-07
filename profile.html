@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vanchy — Profil</title>
+  <meta name="description" content="Vanchy kişisel bağlantı profili">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="profile-page">
+  <div class="profile-bg"></div>
+  <main class="profile-shell">
+    <a class="back-home" href="index.html">← Ana sayfa</a>
+
+    <section class="profile-box">
+      <div class="profile-actions">
+        <button class="circle-btn" aria-label="Tema değiştir" onclick="toggleTheme()">◐</button>
+        <button class="circle-btn" aria-label="Paylaş" onclick="shareProfile()">↗</button>
+      </div>
+
+      <div class="large-avatar">V</div>
+      <h1>Vanchy <span class="verified">✓</span></h1>
+      <div class="handle">@vanchy</div>
+      <p class="profile-bio">Creator · Gamer · Digital<br>Yeni projeler ve sosyal hesaplarım burada.</p>
+
+      <div class="social-icons">
+        <a href="#" aria-label="Instagram">◎</a>
+        <a href="#" aria-label="X">𝕏</a>
+        <a href="#" aria-label="YouTube">▶</a>
+        <a href="#" aria-label="TikTok">♪</a>
+        <a href="#" aria-label="Website">⌁</a>
+      </div>
+
+      <div class="profile-links">
+        <a class="profile-link" href="https://instagram.com/" target="_blank" rel="noreferrer">
+          <span><b>Instagram</b><small>@vanchy</small></span><strong>↗</strong>
+        </a>
+        <a class="profile-link" href="https://youtube.com/" target="_blank" rel="noreferrer">
+          <span><b>YouTube</b><small>Videolar & içerik</small></span><strong>↗</strong>
+        </a>
+        <a class="profile-link" href="https://discord.com/" target="_blank" rel="noreferrer">
+          <span><b>Discord</b><small>Topluluğa katıl</small></span><strong>↗</strong>
+        </a>
+        <a class="profile-link" href="#" onclick="return copyText('https://example.com')">
+          <span><b>Web Sitem</b><small>Projelerim</small></span><strong>↗</strong>
+        </a>
+      </div>
+
+      <div class="music-card">
+        <div class="album">♪</div>
+        <div class="track"><b>Now Playing</b><span>Favori şarkın — Artist</span></div>
+        <button onclick="togglePlay(this)" aria-label="Oynat">▶</button>
+      </div>
+
+      <p class="profile-foot">Powered by VLink</p>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
